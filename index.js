@@ -1,19 +1,18 @@
 const express = require("express");
+require('dotenv').config()
 
 const app = express();
 
 require("./startup/routes")(app);
 require("./startup/db")();
 
-const PORT = process.env.PORT || 4000;
-const server = app.listen(PORT, () => {
+const PORT = process.env.PORT;
+const server = app.listen(PORT, (err) => {
+  if (err) console.log("Error in server setup");
   console.log(`Listening on port ${PORT}...`);
 });
 
-app.get("/check", (req, res) => {
-  res.status(200).json({ message: "Basic thing working fine in server" });
+process.on("unhandledRejection", (reason, promise) => {
+  console.log("Unhandled Rejection at:", reason.stack || reason);
 });
-
-//server.close()
-
 module.exports = server;
